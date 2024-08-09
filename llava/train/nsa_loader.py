@@ -140,9 +140,10 @@ class MVTecConcatSyntheticAnomaly(Dataset):
             # do anomaly
             category = [word for word in self.categories if word in l_img_path[0]]
             images[-1], mask = self.anomaly_fn[category[0]].transform(images[-1])
+            mask = 1
             
         else:
-            mask = None
+            mask = 0
         
         catimg = concatenate_images_side_by_side(images)
         if self.transform is not None:
