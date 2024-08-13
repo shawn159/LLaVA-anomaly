@@ -333,6 +333,17 @@ conv_llava_v1 = Conversation(
     sep=" ",
     sep2="</s>",
 )
+#jslee
+conv_anomaly = Conversation(
+    system="The corresponding images are arranged in the form of four. The left three represent normal sample images and the rightmost one represents the test image. Compared to the three sample images, is there an anomaly in the test image? Answer 0 if not, and 1 if there is.",
+    roles=("USER", "ASSISTANT"),
+    version="v1",
+    messages=(),
+    offset=0,
+    sep_style=SeparatorStyle.TWO,
+    sep=" ",
+    sep2="</s>",
+)
 
 conv_llava_v1_mmtag = Conversation(
     system="A chat between a curious user and an artificial intelligence assistant. "
@@ -387,6 +398,8 @@ conv_templates = {
     "llava_v1": conv_llava_v1,
     "v1_mmtag": conv_llava_v1_mmtag,
     "llava_llama_2": conv_llava_llama_2,
+
+    "anomaly": conv_anomaly,
 
     "mpt": conv_mpt,
 }

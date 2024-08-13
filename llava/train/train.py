@@ -37,7 +37,7 @@ from llava.mm_utils import tokenizer_image_token
 
 from PIL import Image
 
-from nsa_loader import get_nsa_dataset
+from nsa_loader_train import get_nsa_dataset
 
 local_rank = None
 

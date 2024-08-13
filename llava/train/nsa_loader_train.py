@@ -3,26 +3,26 @@ from PIL import Image
 import numpy as np
 
 from torch.utils.data import Dataset
-from nsa import NSA_transform 
+from nsa import NSA_transform, concatenate_images_side_by_side
 
 
 data_path = "/data/anomaly/mvtec/"
 
 
 # for training
-# categoriesA = [
-#     "bottle",
-#     "cable",
-#     "capsule",
-#     "carpet",
-#     "grid",
-#     "hazelnut",
-#     "leather"
-#]
-
 categoriesA = [
-    "bottle"
+     "bottle",
+     "cable",
+     "capsule",
+     "carpet",
+     "grid",
+     "hazelnut",
+     "leather"
 ]
+
+#categoriesA = [
+#    "bottle"
+#]
 
 # for testing only (unseen classes)
 categoreisB = [
@@ -38,29 +38,6 @@ categoreisB = [
 ]
 
 
-def concatenate_images_side_by_side(images, border_width=0, border_color=(0, 0, 0)):
-    """
-    Horizontally concatenating "images" into a single image.
-    images: a list of PIL images
-    """
-    # Load all images from the list of image paths
-    # images = [Image.open(path) for path in image_paths]
-    
-    # Calculate total width and max height, adding space for borders between images
-    total_width = sum(image.width for image in images) + border_width * (len(images) - 1)
-    max_height = max(image.height for image in images)
-    
-    # Create a new image with the appropriate total width and max height
-    new_image = Image.new('RGB', (total_width, max_height), color=border_color)
-    
-    # Paste images into the new image side by side, with optional borders
-    x_offset = 0
-    for img in images:
-        new_image.paste(img, (x_offset,0))
-        x_offset += img.width + border_width
-    
-    # Instead of saving, return the new image
-    return new_image
 
 """
 The shape of datadict
@@ -80,7 +57,7 @@ The shape of datadict
   }
 """
 
-promtp =  "<image>\nThe corresponding images are arranged in the form of four. The left three represent normal sample images and the rightmost one represents the test image. Compared to the three sample images, is there an anomaly in the test image? Answer 0 if not, and 1 if there is."
+prompt =  "<image>\nThe corresponding images are arranged in the form of four. The left three represent normal sample images and the rightmost one represents the test image. Compared to the three sample images, is there an anomaly in the test image? Answer 0 if not, and 1 if there is."
 
 class MVTecConcatSyntheticAnomaly(Dataset):
     def __init__(self, categories, data_path, anomaly_fn, K=4, transform=None, grid_size=2):
@@ -148,7 +125,7 @@ class MVTecConcatSyntheticAnomaly(Dataset):
         catimg = concatenate_images_side_by_side(images)
         if self.transform is not None:
             catimg = self.transform(catimg)
-        return create_datadict(i, catimg, mask)
+        return self.create_datadict(i, catimg, mask)
 
     def __len__(self):
         return len(self.l_tuple_img)

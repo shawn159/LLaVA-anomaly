@@ -80,3 +80,29 @@ class NSA_transform:
     
     x = Image.fromarray(x)
     return x, mask
+
+
+def concatenate_images_side_by_side(images, border_width=0, border_color=(0, 0, 0)):
+    """
+    Horizontally concatenating "images" into a single image.
+    images: a list of PIL images
+    """
+    # Load all images from the list of image paths
+    # images = [Image.open(path) for path in image_paths]
+    
+    # Calculate total width and max height, adding space for borders between images
+    total_width = sum(image.width for image in images) + border_width * (len(images) - 1)
+    max_height = max(image.height for image in images)
+    
+    # Create a new image with the appropriate total width and max height
+    new_image = Image.new('RGB', (total_width, max_height), color=border_color)
+    
+    # Paste images into the new image side by side, with optional borders
+    x_offset = 0
+    for img in images:
+        new_image.paste(img, (x_offset,0))
+        x_offset += img.width + border_width
+    
+    # Instead of saving, return the new image
+    return new_image
+
